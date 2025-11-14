@@ -1,0 +1,53 @@
+import numpy as np
+from sklearn.cluster import DBSCAN
+from typing import List
+
+def simple_dbscan_clusters(data: np.ndarray, eps: float = 0.5, min_samples: int = 5) -> List[np.ndarray]:
+    """
+    Простейший алгоритм поиска центров кластеров с помощью DBSCAN
+    
+    Parameters:
+    data: 2D numpy array с целыми числами
+    eps: параметр eps для DBSCAN (расстояние)
+    min_samples: параметр min_samples для DBSCAN (минимальное количество точек)
+    
+    Returns:
+    centers: список центров кластеров (каждый центр - 1D numpy array)
+    """
+    
+    # Применяем DBSCAN
+    clustering = DBSCAN(eps=eps, min_samples=min_samples).fit(data)
+    
+    # Получаем метки кластеров
+    labels = clustering.labels_
+    
+    centers: List[np.ndarray] = []
+    
+    # Для каждого кластера (кроме шума -1) находим центр
+    for cluster_id in set(labels):
+        if cluster_id != -1:  # Игнорируем шум
+            # Точки текущего кластера
+            cluster_points = data[labels == cluster_id]
+            # Вычисляем центр (среднее по координатам)
+            center = np.mean(cluster_points, axis=0)
+            centers.append(center)
+    
+    return centers
+
+# Пример использования
+if __name__ == "__main__":
+    # Пример данных
+    data = np.array([
+        [1, 2], [1, 3], [2, 2], [2, 3],  # Кластер 1
+        [8, 7], [8, 8], [9, 7], [9, 8],  # Кластер 2
+        [5, 5]                            # Шум
+    ])
+    
+    # Находим центры кластеров
+    centers = simple_dbscan_clusters(data, eps=1.5, min_samples=2)
+    
+    print("Исходные данные:")
+    print(data)
+    print("\nЦентры кластеров:")
+    for i, center in enumerate(centers):
+        print(f"Кластер {i+1}: {center}")
