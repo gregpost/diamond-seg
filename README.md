@@ -1,0 +1,1 @@
+Diamond segmentation on image.  
