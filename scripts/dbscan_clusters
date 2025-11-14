@@ -1,0 +1,53 @@
+import numpy as np
+from sklearn.cluster import DBSCAN
+from typing import List
+
+def dbscan_clusters(data: np.ndarray, eps: float = 0.5, min_samples: int = 5) -> List[np.ndarray]:
+    """
+    Algorithm for finding cluster centers using DBSCAN
+    
+    Parameters:
+    data: 2D numpy array with integer numbers
+    eps: DBSCAN eps parameter (distance)
+    min_samples: DBSCAN min_samples parameter (minimum number of points)
+    
+    Returns:
+    centers: list of cluster centers (each center is a 1D numpy array)
+    """
+    
+    # Apply DBSCAN
+    clustering = DBSCAN(eps=eps, min_samples=min_samples).fit(data)
+    
+    # Get cluster labels
+    labels = clustering.labels_
+    
+    centers: List[np.ndarray] = []
+    
+    # For each cluster (excluding noise -1) find the center
+    for cluster_id in set(labels):
+        if cluster_id != -1:  # Ignore noise
+            # Points of the current cluster
+            cluster_points = data[labels == cluster_id]
+            # Calculate center (mean by coordinates)
+            center = np.mean(cluster_points, axis=0)
+            centers.append(center)
+    
+    return centers
+
+# Example usage
+if __name__ == "__main__":
+    # Example data
+    data = np.array([
+        [1, 2], [1, 3], [2, 2], [2, 3],  # Cluster 1
+        [8, 7], [8, 8], [9, 7], [9, 8],  # Cluster 2
+        [5, 5]                            # Noise
+    ])
+    
+    # Find cluster centers
+    centers = dbscan_clusters(data, eps=1.5, min_samples=2)
+    
+    print("Input data:")
+    print(data)
+    print("\nCluster centers:")
+    for i, center in enumerate(centers):
+        print(f"Cluster {i+1}: {center}")
