@@ -8,8 +8,9 @@
 import numpy as np
 
 # Чтение файла и преобразование в массив NumPy
-with open('data.txt', 'r') as f:
-    data = [list(map(int, line.split())) for line in f]
-
-array = np.array(data)
-print(array)
+def read_arr_from_file(abs_file_path: str) -> np.ndarray:
+    with open('data.txt', 'r') as f:
+        data = [list(map(int, line.split())) for line in f]
+        
+    array = np.array(data)
+    return array
