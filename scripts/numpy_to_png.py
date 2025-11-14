@@ -1,4 +1,3 @@
-```python
 import numpy as np
 from PIL import Image
 
@@ -25,4 +24,3 @@ if __name__ == "__main__":
     # Create sample 2D array
     data = np.random.rand(100, 100) * 255
     save_array_as_png(data, "output.png")
-```
